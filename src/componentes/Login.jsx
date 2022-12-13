@@ -1,10 +1,6 @@
 import { React, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Autentication } from "../services/Autentication";
-import firebase from  '../firebase';
-
-
-
 
 import "../styles/Login.css";
 import { Register } from "./Register";

@@ -1,8 +1,6 @@
 import { React, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import { Autentication } from "../services/Autentication";
-import { ref, uploadBytes } from "firebase/storage";
-import { storage } from "../firebase/firebase";
 import "../styles/Register.css";
 
 export const Register = () => {
@@ -14,32 +12,19 @@ export const Register = () => {
     const [registerEmail, setRegisterEmail] = useState('');
     const [registerUsername, setRegisterUsername] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
-    const [registerPhoto, setRegisterPhoto] = useState();
 
     const navigate = useNavigate();
 
-    let uidUser;
-
-    const handleSubmit = async(e, email, password, username, name, last_name, photo) => {
+    const handleSubmit = async(e, email, password, username, name, last_name) => {
         e.preventDefault();
         
-        await registerService(email, password, username, name, last_name).then((newUser) => {
-            if(newUser){
-                uidUser = newUser.user.uid;
-                uploadImage(photo, uidUser);
-                navigate('/login');
-            }
-        })
-    }
-
-    const uploadImage = async(photo, uid) => {
-        const imageRef = ref(storage, `profiles/${uid}`);
-        await uploadBytes(imageRef, photo);
+        await registerService(email, password, username, name, last_name);
+        navigate('/login');
     }
 
     return(
         <div id="registerPage">
-            <form onSubmit={(e) => handleSubmit(e, registerEmail, registerPassword, registerUsername, registerName, registerLastName, registerPhoto)} id="register-form">
+            <form onSubmit={(e) => handleSubmit(e, registerEmail, registerPassword, registerUsername, registerName, registerLastName)} id="register-form">
                 <h2>Registrate</h2>
                 <div className="register-info">
                     <label htmlFor="name">Nombre</label>
@@ -60,10 +45,6 @@ export const Register = () => {
                 <div className="register-info">
                     <label htmlFor="password">Contraseña</label>
                     <input type="password" name="password" onChange={(event) => setRegisterPassword(event.target.value)}/>
-                </div>
-                <div className="register-info">
-                    <label htmlFor="photo">Foto</label>
-                    <input id="photo" type="file" name="photo" onChange={(event) => setRegisterPhoto(event.target.files[0])}/>
                 </div>
                 <button id="register-btn">Registrarse</button>
             </form> 
